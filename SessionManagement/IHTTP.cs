@@ -10,7 +10,7 @@ namespace SessionManagement
     public class IHTTP : IHttpModule
     {
         public static Dictionary<string, string> table = new Dictionary<string, string>();
-        public void Dispose(){}
+        public void Dispose() { }
         public void Init(HttpApplication context)
         {
             context.BeginRequest += new EventHandler(OnBeginRequest);
@@ -35,17 +35,17 @@ namespace SessionManagement
                     table.Add(ePass, pass);
                 }
                 //Force 3rd page working
-                if (URL.Contains("OtherPage.aspx") && table.Count > 4){ URL = "MembersMain.aspx";}
+                if (URL.Contains("OtherPage.aspx") && table.Count > 4) { URL = "MembersMain.aspx"; }
                 //Shove good string into URL
                 context.RewritePath(URL, string.Empty, "u=" + eUser + "&p=" + ePass, true);
                 //Checks dictionary for key value pair
                 if (table.ContainsKey(pass) && table.ContainsValue(pass))
                 {
                     //Checks again for user, if and only if there rewrites path
-                    if (table.ContainsKey(user)) { context.RewritePath(URL, string.Empty, "u=" + table[user] + "&p=" + table[pass], true); }   
+                    if (table.ContainsKey(user)) { context.RewritePath(URL, string.Empty, "u=" + table[user] + "&p=" + table[pass], true); }
                 }
                 //Changes URL to new one
-                else if (table.ContainsValue(user)) {context.Response.Redirect(context.Request.Url.ToString());}
+                else if (table.ContainsValue(user)) { context.Response.Redirect(context.Request.Url.ToString()); }
             }
         }
         private string encryptStuff(string info)
@@ -59,7 +59,7 @@ namespace SessionManagement
             b = ASCIIEncoding.ASCII.GetBytes(info);
             h = new MD5CryptoServiceProvider().ComputeHash(b);
             StringBuilder output = new StringBuilder(h.Length);
-            for (a = 0; a < h.Length; a++) {output.Append(h[a].ToString("X2"));}
+            for (a = 0; a < h.Length; a++) { output.Append(h[a].ToString("X2")); }
             return output.ToString().Substring(0, 6) + sodiumChloride + output.ToString().Substring(6);
         }
     }
