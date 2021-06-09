@@ -13,7 +13,11 @@ namespace SessionManagement
 		{
 			string user = Request.QueryString["u"];
 			string pass = Request.QueryString["p"];
-			if (Session["user"].ToString() != user) { Response.Redirect("Default.aspx"); }
+			if (Session["user"].ToString() != user) 
+			{ 
+				IHTTP.table.Clear();
+				Response.Redirect("Default.aspx"); 
+			}
 			lblUser.Text = "Hello, " + user + "! Your password is " + pass;
 		}
 	}
