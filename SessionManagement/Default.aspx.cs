@@ -15,6 +15,7 @@ namespace SessionManagement
 			{
 				string user = txtUser.Text;
 				string pass = txtPassword.Text;
+				Session.Add("user", user);
 				Response.Redirect("OtherPage.aspx?u=" + txtUser.Text + "&p=" + txtPassword.Text);
 			}
 			else {lblMessage.Text = "Account not recognized";}
