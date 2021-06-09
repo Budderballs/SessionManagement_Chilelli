@@ -56,11 +56,11 @@ namespace SessionManagement
             int a;
             byte[] b;
             byte[] h;
-            b = ASCIIEncoding.ASCII.GetBytes(info);
-            h = new MD5CryptoServiceProvider().ComputeHash(b);
+            b = UTF8Encoding.UTF8.GetBytes(info);
+            h = new SHA256CryptoServiceProvider().ComputeHash(b);
             StringBuilder output = new StringBuilder(h.Length);
             for (a = 0; a < h.Length; a++) { output.Append(h[a].ToString("X2")); }
-            return output.ToString().Substring(0, 6) + sodiumChloride + output.ToString().Substring(6);
+            return output.ToString().Substring(0, 6) + sodiumChloride + output.ToString().Substring(7);
         }
     }
 }
