@@ -19,36 +19,36 @@ namespace SessionManagement
         {
             HttpContext context = ((HttpApplication)sender).Context;
             string URL = context.Request.Path;
-            string user = context.Request.QueryString["u"];
-            string pass = context.Request.QueryString["p"];
-            string eUser = string.Empty;
-            string ePass = string.Empty;
+            string oUser = context.Request.QueryString["u"];
+            string oPass = context.Request.QueryString["p"];
+            string SHAUser256 = string.Empty;
+            string SHAPass256 = string.Empty;
             //Hard coded check if user is not null
-            if (!string.IsNullOrEmpty(user))
+            if (!string.IsNullOrEmpty(oUser))
             {
                 //Looks for values in dictionary table, if not adds it
-                if (!table.ContainsKey(eUser))
+                if (!table.ContainsKey(SHAUser256))
                 {
-                    eUser = encryptStuff(user);
-                    ePass = encryptStuff(pass);
-                    table.Add(eUser, user);
-                    table.Add(ePass, pass);
+                    SHAUser256 = encryptStuff(oUser);
+                    SHAPass256 = encryptStuff(oPass);
+                    table.Add(SHAUser256, oUser);
+                    table.Add(SHAPass256, oPass);
                 }
                 //Force 3rd page working
                 if (URL.Contains("OtherPage.aspx") && table.Count > 4) { URL = "MembersMain.aspx"; }
                 //Shove good string into URL
-                context.RewritePath(URL, string.Empty, "u=" + eUser + "&p=" + ePass, true);
+                context.RewritePath(URL, string.Empty, "u=" + SHAUser256 + "&p=" + SHAPass256, true);
                 //Checks dictionary for key value pair
-                if (table.ContainsKey(pass) && table.ContainsValue(pass))
+                if (table.ContainsKey(oPass) && table.ContainsValue(oPass))
                 {
                     //Checks again for user, if and only if there rewrites path
-                    if (table.ContainsKey(user)) { context.RewritePath(URL, string.Empty, "u=" + table[user] + "&p=" + table[pass], true); }
+                    if (table.ContainsKey(oUser)) { context.RewritePath(URL, string.Empty, "u=" + table[oUser] + "&p=" + table[oPass], true); }
                 }
                 //Changes URL to new one
-                else if (table.ContainsValue(user)) { context.Response.Redirect(context.Request.Url.ToString()); }
+                else if (table.ContainsValue(oUser)) { context.Response.Redirect(context.Request.Url.ToString()); }
             }
         }
-        private string encryptStuff(string info)
+        private string encryptStuff(string plainInfo)
         {
             Random r = new Random(DateTime.Now.Millisecond);
             Thread.Sleep(1);
@@ -56,11 +56,11 @@ namespace SessionManagement
             int a;
             byte[] b;
             byte[] h;
-            b = UTF8Encoding.UTF8.GetBytes(info);
+            b = UTF8Encoding.UTF8.GetBytes(plainInfo);
             h = new SHA256CryptoServiceProvider().ComputeHash(b);
-            StringBuilder output = new StringBuilder(h.Length);
-            for (a = 0; a < h.Length; a++) { output.Append(h[a].ToString("X2")); }
-            return output.ToString().Substring(0, 6) + sodiumChloride + output.ToString().Substring(7);
+            StringBuilder hashedInfo = new StringBuilder(h.Length);
+            for (a = 0; a < h.Length; a++) { hashedInfo.Append(h[a].ToString("X2")); }
+            return hashedInfo.ToString().Substring(0, 6) + sodiumChloride + hashedInfo.ToString().Substring(7);
         }
     }
 }

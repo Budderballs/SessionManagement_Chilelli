@@ -8,9 +8,9 @@ namespace SessionManagement
         {
             if (txtUser.Text == "Yuya" && txtPassword.Text == "Sum" || txtUser.Text == "Budder" && txtPassword.Text == "Ball")
             {
-                string user = txtUser.Text;
-                string pass = txtPassword.Text;
-                Session.Add("user", user);
+                string oUser = txtUser.Text;
+                string oPass = txtPassword.Text;
+                Session.Add("user", oUser);
                 Response.Redirect("OtherPage.aspx?u=" + txtUser.Text + "&p=" + txtPassword.Text);
             }
             else { lblMessage.Text = "Account not recognized"; }
